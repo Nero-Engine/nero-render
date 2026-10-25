@@ -12,6 +12,7 @@ mark() { echo "$1" >> $N/READY; }
 step() { echo "$(date +%T) $*"; }
 die() { echo "SETUP FAILED: $1"; for f in /tmp/$2.log; do [ -f $f ] && grep -v -E '^\*+$|EP Error|Falling back|when using' $f | tail -25; done; exit 1; }
 export DEBIAN_FRONTEND=noninteractive
+command -v curl >/dev/null || { apt-get update -qq && apt-get install -y -qq --no-install-recommends curl ca-certificates > /tmp/apt0.log 2>&1; }
 want blender && (curl -sfL -o /tmp/b.tar.xz https://download.blender.org/release/Blender${BLENDER_V%.*}/blender-${BLENDER_V}-linux-x64.tar.xz; echo $? > /tmp/b.rc) &
 want hyperframes && (curl -sfL -o /tmp/n.tar.xz https://nodejs.org/dist/v${NODE_V}/node-v${NODE_V}-linux-x64.tar.xz; echo $? > /tmp/n.rc) &
 if ! have apt; then
